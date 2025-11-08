@@ -9,7 +9,3 @@ cdk.out
 
 !lambda/**/*/.js
 !lambda/authorizer.js
-
-.env
-.pytest_cache
-__pycache__/

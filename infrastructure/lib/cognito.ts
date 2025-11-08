@@ -10,9 +10,6 @@ export interface CognitoPoolProps {
 }
 
 export class CognitoPool extends Construct {
-    public readonly userPool: cognito.UserPool;
-    public readonly userPoolClient: cognito.UserPoolClient;
-    
     constructor(scope: Construct, id: string, props: CognitoPoolProps) {
         super(scope, id);
         
@@ -92,9 +89,6 @@ export class CognitoPool extends Construct {
             idTokenValidity: Duration.days(1),
             refreshTokenValidity: Duration.days(30),
         });
-
-        this.userPool = cognitoPool;
-        this.userPoolClient = client;
 
 
         cognitoPool.addTrigger(cognito.UserPoolOperation.POST_CONFIRMATION, applyRoleLambda);
