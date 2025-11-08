@@ -1,25 +1,21 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/auth/service/AuthService';
 import { MovieDB, TopicArn, UserSubscriptions } from 'src/app/movie/model/movie.model';
-import { ConfigService } from 'src/app/service/config.service';
+import { environment } from 'src/env/env';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MovieService{
-    private environment: any;
+export class MovieService {
 
-    constructor(private http: HttpClient, private authService: AuthService, private configService: ConfigService) {
-        this.environment = this.configService.getConfig();
-    }
+    constructor(private http: HttpClient, private authService: AuthService) {}
 
     headers = new HttpHeaders({
         skip: 'true'
     });
-
 
     getUploadUrl(movieName: string, uuid: string, resolution: string, title: string,
         description: string, actors: string, directors: string, genres: string, thumbnail: string): Observable<any>{
@@ -36,7 +32,7 @@ export class MovieService{
             'thumbnail' : thumbnail
         }
 
-        const url =  this.environment.API + `/upload-url`;
+        const url =  environment.getUploadUrl ;
 		return this.http.post<any>(url, body, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
@@ -49,7 +45,7 @@ export class MovieService{
         let params = new HttpParams()
             .set('movie_name', movieName);
 
-        const url = this.environment.API + `/get-movie`;
+        const url = environment.getMovie;
         return this.http.get<MovieDB[]>(url, { params });
     }
 
@@ -60,7 +56,7 @@ export class MovieService{
             .set('resolution', resolution)
             .set('user', this.authService.getUsername()!);
         
-        const url = this.environment.API + `/preview-url`;
+        const url = environment.getPreviewUrl;
         return this.http.get<any>(url, { params });
     }
 
@@ -71,7 +67,7 @@ export class MovieService{
             .set('resolution', resolution)
             .set('user', this.authService.getUsername()!);
         
-        const url = this.environment.API + `/download-url`;
+        const url = environment.getDownloadUrl;
         return this.http.get<any>(url, { params });
     }
 
@@ -79,7 +75,7 @@ export class MovieService{
         let params = new HttpParams()
             .set('directory', movieName);
 
-        const url = this.environment.API + `/delete-movie`;
+        const url = environment.deleteMovie;
         return this.http.delete<any>(url, { params });
     }
 
@@ -89,7 +85,7 @@ export class MovieService{
             params = params.set('query', query);
         }
 
-        const url = this.environment.API + `/movies`;
+        const url = environment.getAllMovies;
         return this.http.get<MovieDB[]>(url, { params });
     }
 
@@ -107,7 +103,7 @@ export class MovieService{
             'thumbnail' : thumbnail
         }
         
-        const url = this.environment + `/put-movie`;
+        const url = environment.updateMovie;
         return this.http.put<any>(url, body, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
@@ -120,7 +116,7 @@ export class MovieService{
             .set('userId', username)
             .set('directory', movieName);
 
-        const url = this.environment.API + `/get-like`;
+        const url = environment.isLiked;
         return this.http.get<any>(url, { params });
     }
 
@@ -131,7 +127,7 @@ export class MovieService{
             "liked": liked
         }
 
-        const url = this.environment.API + `/post-like`;
+        const url = environment.postLike;
         return this.http.post<any>(url, body, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
@@ -144,12 +140,12 @@ export class MovieService{
         .set('userId', username)
         .set('directory', movieName);
 
-        const url = this.environment.API + `/delete-like`;
+        const url = environment.deleteLike;
         return this.http.delete<any>(url, { params });
     }
 
     getTopics(){
-        const url = this.environment.API + `/get-topics`;
+        const url = environment.getTopics;
         return this.http.get<TopicArn[]>(url);
     }
 
@@ -157,7 +153,7 @@ export class MovieService{
         let params = new HttpParams()
         .set('userId', username);
 
-        const url = this.environment.API + `/get-subscription`;
+        const url = environment.getSubscription;
         return this.http.get<UserSubscriptions>(url, { params });
     }
 
@@ -168,7 +164,7 @@ export class MovieService{
             "topics": topics, 
         }
 
-        const url = this.environment.API + `/post-subscription`;
+        const url = environment.postSubscription;
         return this.http.post<any>(url, body, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
@@ -183,7 +179,7 @@ export class MovieService{
             "topics": topics, 
         }
 
-        const url = this.environment.API + `/put-subscription`;
+        const url = environment.putSubscription;
         return this.http.put<any>(url, body, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
@@ -195,7 +191,7 @@ export class MovieService{
         let params = new HttpParams()
         .set('userId', username);
 
-        const url = this.environment.API + `/get-feed`;
+        const url = environment.getFeed;
         return this.http.get<MovieDB[]>(url, { params });
     }
 

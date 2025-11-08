@@ -14,16 +14,13 @@ interface LikesStackProps extends cdk.StackProps {
     api: apigatewayv2.HttpApi;
     httpAuthorizer: lambdaAuthorizers.HttpLambdaAuthorizer;
     likes: dynamodb.TableV2;
-    stageName?: string;
 }
 
 export class LikesStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: LikesStackProps) {
         super(scope, id, props);
 
-        const prefix = props && props.stageName ? `${props.stageName}-` : '';
-
-        const postLike = new lambda.Function(this, `${prefix}PostLikeLambda`, {
+        const postLike = new lambda.Function(this, 'PostLikeLambda', {
             runtime: lambda.Runtime.PYTHON_3_9,
             handler: 'post_like.handler',
             code: lambda.Code.fromAsset(path.join(__dirname, '../../lambda/likes-endpoints')),
@@ -35,7 +32,7 @@ export class LikesStack extends cdk.Stack {
         props.likes.grantWriteData(postLike);
 
         const postLikeIntegration = new HttpLambdaIntegration(
-            `${prefix}PostLike`,
+            "PostLike",
             postLike
         );
         props.api.addRoutes({
@@ -45,7 +42,7 @@ export class LikesStack extends cdk.Stack {
             authorizer: props.httpAuthorizer,
         });
 
-        const getLike = new lambda.Function(this, `${prefix}GetLikeLambda`, {
+        const getLike = new lambda.Function(this, 'GetLikeLambda', {
             runtime: lambda.Runtime.PYTHON_3_9,
             handler: 'get_like.handler',
             code: lambda.Code.fromAsset(path.join(__dirname, '../../lambda/likes-endpoints')),
@@ -57,7 +54,7 @@ export class LikesStack extends cdk.Stack {
         props.likes.grantReadData(getLike);
 
         const getLikeIntegration = new HttpLambdaIntegration(
-            `${prefix}GetLike`,
+            "GetLike",
             getLike
         );
         props.api.addRoutes({
@@ -67,7 +64,7 @@ export class LikesStack extends cdk.Stack {
             authorizer: props.httpAuthorizer,
         });
 
-        const deleteLike = new lambda.Function(this, `${prefix}DeleteLikeLambda`, {
+        const deleteLike = new lambda.Function(this, 'DeleteLikeLambda', {
             runtime: lambda.Runtime.PYTHON_3_9,
             handler: 'delete_like.handler',
             code: lambda.Code.fromAsset(path.join(__dirname, '../../lambda/likes-endpoints')),
@@ -79,7 +76,7 @@ export class LikesStack extends cdk.Stack {
         props.likes.grantWriteData(deleteLike);
 
         const deleteLikeIntegration = new HttpLambdaIntegration(
-            `${prefix}DeleteLike`,
+            "DeleteLike",
             deleteLike
         );
         props.api.addRoutes({
